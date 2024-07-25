@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "app-users"
+version = "0.1.0"
+description = ""
+authors = ["h0diush <h0diush@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.111.1"
+fastapi-users = {extras = ["sqlalchemy"], version = "^13.0.0"}
+uvicorn = {extras = ["standard"], version = "^0.30.1"}
+sqlalchemy = {extras = ["asyncpg"], version = "^2.0.31"}
+pydantic = "^2.8.2"
+pydantic-settings = "^2.3.4"
+alembic = "^1.13.2"
+asyncpg = "^0.29.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
