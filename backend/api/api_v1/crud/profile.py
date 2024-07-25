@@ -1,10 +1,9 @@
-from asyncpg import UniqueViolationError
+from fastapi import HTTPException
+from sqlalchemy import select, Result
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.models import Profile
-from core.schemas.profile import ProfileCreate
-from fastapi import HTTPException
 
 
 async def create_profile(
@@ -17,4 +16,13 @@ async def create_profile(
         await session.commit()
     except IntegrityError:
         raise HTTPException(status_code=400, detail="adadaw")
+    return profile
+
+
+async def get_profile_current_user(
+    session: AsyncSession,
+    user_id: int,
+) -> Profile:
+    stmt = select(Profile).where(Profile.user_id == user_id)
+    profile = await session.scalar(stmt)
     return profile
