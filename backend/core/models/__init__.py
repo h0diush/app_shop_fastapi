@@ -4,6 +4,7 @@ __all__ = (
     "Base",
     "User",
     "AccessToken",
+    "AddressProfileAssociation",
     "Category",
     "Product",
     "Profile",
@@ -11,6 +12,7 @@ __all__ = (
 
 from .access_token import AccessToken
 from .address import Address
+from .address_profile_association import AddressProfileAssociation
 from .base import Base
 from .category import Category
 from .db_helper import db_helper

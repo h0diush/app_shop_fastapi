@@ -1,8 +1,13 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import ForeignKey, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models.mixins import IntIdMixin
 from .base import Base
+
+if TYPE_CHECKING:
+    from .address import Address
 
 
 class Profile(Base, IntIdMixin):
@@ -13,3 +18,7 @@ class Profile(Base, IntIdMixin):
         unique=True,
     )
     phone: Mapped[int]
+    addresses: Mapped[list["Address"]] = relationship(
+        secondary="address_profile_association",
+        back_populates="profile",
+    )
