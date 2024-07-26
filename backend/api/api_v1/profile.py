@@ -5,7 +5,7 @@ from api.dependencies.session import session_depends
 from api.exception.message import NO_PROFILE
 from core.config import settings
 from core.models import User
-from core.schemas.profile import ProfileCreate
+from core.schemas.profile import ProfileSchemas
 from .crud import profile as crud_profile
 
 router = APIRouter(
@@ -14,10 +14,10 @@ router = APIRouter(
 )
 
 
-@router.post("/create", response_model=ProfileCreate)
+@router.post("/create", response_model=ProfileSchemas)
 async def create_profile(
     session: session_depends,
-    profile_in: ProfileCreate,
+    profile_in: ProfileSchemas,
     user: User = Depends(current_user),
 ):
     profile_data = profile_in.dict()
@@ -26,7 +26,7 @@ async def create_profile(
     return profile
 
 
-@router.get("/me", response_model=ProfileCreate)
+@router.get("/me", response_model=ProfileSchemas)
 async def get_main_profile(
     session: session_depends,
     user: User = Depends(current_user),
