@@ -1,5 +1,6 @@
 __all__ = (
     "db_helper",
+    "Address",
     "Base",
     "User",
     "AccessToken",
@@ -9,6 +10,7 @@ __all__ = (
 )
 
 from .access_token import AccessToken
+from .address import Address
 from .base import Base
 from .category import Category
 from .db_helper import db_helper
