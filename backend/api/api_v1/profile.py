@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response, status
 
 from api.api_v1.fastapi_users import current_user
 from api.dependencies.session import session_depends
@@ -14,7 +14,11 @@ router = APIRouter(
 )
 
 
-@router.post("/create", response_model=ProfileSchemas)
+@router.post(
+    "/create",
+    response_model=ProfileSchemas,
+    status_code=status.HTTP_201_CREATED,
+)
 async def create_profile(
     session: session_depends,
     profile_in: ProfileSchemas,
@@ -37,3 +41,11 @@ async def get_main_profile(
     ):
         return profile
     raise NO_PROFILE
+
+
+@router.delete("/delete", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_profile(
+    session: session_depends,
+    user: User = Depends(current_user),
+) -> None:
+    await crud_profile.delete_profile(session, user.id)

@@ -33,6 +33,3 @@ async def delete_profile(session: AsyncSession, user_id: int) -> None:
     await session.execute(stmt)
     await session.commit()
     return None
-
-
-# TODO можно сделать ошибку если профиля нету
