@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from sqlalchemy import select, Result
+from sqlalchemy import select, delete
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -26,3 +26,13 @@ async def get_profile_current_user(
     stmt = select(Profile).where(Profile.user_id == user_id)
     profile = await session.scalar(stmt)
     return profile
+
+
+async def delete_profile(session: AsyncSession, user_id: int) -> None:
+    stmt = delete(Profile).where(Profile.user_id == user_id)
+    await session.execute(stmt)
+    await session.commit()
+    return None
+
+
+# TODO можно сделать ошибку если профиля нету
