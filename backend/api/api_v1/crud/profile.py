@@ -15,7 +15,10 @@ async def create_profile(
     try:
         await session.commit()
     except IntegrityError:
-        raise HTTPException(status_code=400, detail="adadaw")
+        raise HTTPException(
+            status_code=400,
+            detail="Профиль уже создан",
+        )
     return profile
 
 
