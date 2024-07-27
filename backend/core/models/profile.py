@@ -8,6 +8,7 @@ from .base import Base
 
 if TYPE_CHECKING:
     from .address import Address
+    from .user import User
 
 
 class Profile(Base, IntIdMixin):
@@ -22,3 +23,4 @@ class Profile(Base, IntIdMixin):
         secondary="address_profile_association",
         back_populates="profile",
     )
+    user: Mapped["User"] = relationship(back_populates="profile")
