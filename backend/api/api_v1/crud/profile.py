@@ -3,6 +3,7 @@ from sqlalchemy import select, delete
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from api.exception.message import PROFILE_EXISTS
 from core.models import Profile
 
 
@@ -15,10 +16,7 @@ async def create_profile(
     try:
         await session.commit()
     except IntegrityError:
-        raise HTTPException(
-            status_code=400,
-            detail="Профиль уже создан",
-        )
+        raise PROFILE_EXISTS
     return profile
 
 
