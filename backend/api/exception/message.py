@@ -10,3 +10,7 @@ PROFILE_EXISTS = HTTPException(
     detail="Профиль уже существует",
 )
 
+NO_ADDRESS = HTTPException(
+    status_code=status.HTTP_404_NOT_FOUND,
+    detail="Адрес не существует",
+)
