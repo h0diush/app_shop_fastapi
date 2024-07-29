@@ -7,3 +7,7 @@ class AddressModel(BaseModel):
     home: int
     room: int | None
     entrance: int | None
+
+
+class AddressMeModel(AddressModel):
+    id: int
