@@ -1,9 +1,9 @@
-from sqlalchemy import select, delete
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
+from api.api_v1.crud.utilities import get_addresses_through_profile_user
 from api.exception.message import NO_ADDRESS
-from core.models import Address, User, Profile
+from core.models import Address
 from core.schemas.address import AddressModel
 
 
@@ -14,15 +14,7 @@ async def add_address(
 ) -> Address:
     address = Address(**address_in.model_dump())
     session.add(address)
-    user = await session.scalar(
-        select(User)
-        .where(User.id == user_id)
-        .options(
-            selectinload(
-                User.profile,
-            ).selectinload(Profile.addresses),
-        ),
-    )
+    user = await get_addresses_through_profile_user(session, user_id)
     user.profile.addresses.append(address)
     await session.commit()
     return address
@@ -33,15 +25,7 @@ async def delete_address(
     address_id: int,
     user_id: int,
 ) -> None:
-    user = await session.scalar(
-        select(User)
-        .where(User.id == user_id)
-        .options(
-            selectinload(
-                User.profile,
-            ).selectinload(Profile.addresses),
-        ),
-    )
+    user = await get_addresses_through_profile_user(session, user_id)
     stmt = select(Address).where(Address.id == address_id)
     address = await session.scalar(stmt)
     if not address or not address in user.profile.addresses:
