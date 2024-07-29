@@ -4,20 +4,22 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from api.api_v1.crud.utilities import get_addresses_through_profile_user
 from api.exception.message import NO_ADDRESS
 from core.models import Address
-from core.schemas.address import AddressModel
+from core.schemas.address import AddressModel, AddressMeModel
 
 
 async def add_address(
     session: AsyncSession,
     address_in: AddressModel,
     user_id: int,
-) -> Address:
+) -> Address | None:
     address = Address(**address_in.model_dump())
     session.add(address)
     user = await get_addresses_through_profile_user(session, user_id)
-    user.profile.addresses.append(address)
-    await session.commit()
-    return address
+    if user.profile:
+        user.profile.addresses.append(address)
+        await session.commit()
+        return address
+    return None
 
 
 async def delete_address(
@@ -37,6 +39,8 @@ async def delete_address(
 async def get_addresses_for_current_user(
     session: AsyncSession,
     user_id: int,
-):
+) -> list[AddressMeModel] | None:
     user = await get_addresses_through_profile_user(session, user_id)
-    return user.profile.addresses
+    if user.profile:
+        return user.profile.addresses
+    return None

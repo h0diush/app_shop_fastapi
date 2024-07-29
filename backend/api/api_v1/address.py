@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, status
 from api.api_v1.crud import address as crud_address
 from api.api_v1.fastapi_users import current_user
 from api.dependencies.session import session_depends
+from api.exception.message import NO_PROFILE
 from core.config import settings
 from core.models import User
 from core.schemas.address import AddressModel, AddressMeModel
@@ -23,11 +24,13 @@ async def create_address_for_user_profile(
     address_in: AddressModel,
     user: User = Depends(current_user),
 ):
-    return await crud_address.add_address(
+    if address := await crud_address.add_address(
         session=session,
         address_in=address_in,
         user_id=user.id,
-    )
+    ):
+        return address
+    raise NO_PROFILE
 
 
 @router.delete(
@@ -51,7 +54,11 @@ async def get_addresses_current_user(
     session: session_depends,
     user: User = Depends(current_user),
 ):
-    return await crud_address.get_addresses_for_current_user(
-        session,
-        user.id,
-    )
+    if not (
+        address := await crud_address.get_addresses_for_current_user(
+            session,
+            user.id,
+        )
+    ):
+        raise NO_PROFILE
+    return address
