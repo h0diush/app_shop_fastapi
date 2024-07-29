@@ -5,9 +5,7 @@ from api.dependencies.session import session_depends
 from api.exception.message import NO_PROFILE
 from core.config import settings
 from core.models import User
-from core.schemas.address import AddressModel
 from core.schemas.profile import ProfileSchemas
-from .crud import address as crud_address
 from .crud import profile as crud_profile
 
 router = APIRouter(
@@ -51,36 +49,3 @@ async def delete_profile(
     user: User = Depends(current_user),
 ) -> None:
     await crud_profile.delete_profile(session, user.id)
-
-
-@router.post(
-    "/address/create",
-    status_code=status.HTTP_201_CREATED,
-    response_model=AddressModel,
-)
-async def create_address_for_user_profile(
-    session: session_depends,
-    address_in: AddressModel,
-    user: User = Depends(current_user),
-):
-    return await crud_address.add_address(
-        session=session,
-        address_in=address_in,
-        user_id=user.id,
-    )
-
-
-@router.delete(
-    "/address/delete",
-    status_code=status.HTTP_204_NO_CONTENT,
-)
-async def delete_addresses(
-    session: session_depends,
-    address_id: int,
-    user: User = Depends(current_user),
-):
-    return await crud_address.delete_address(
-        session=session,
-        user_id=user.id,
-        address_id=address_id,
-    )
