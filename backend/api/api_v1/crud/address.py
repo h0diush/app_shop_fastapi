@@ -32,3 +32,11 @@ async def delete_address(
         raise NO_ADDRESS
     await session.delete(address)
     await session.commit()
+
+
+async def get_addresses_for_current_user(
+    session: AsyncSession,
+    user_id: int,
+):
+    user = await get_addresses_through_profile_user(session, user_id)
+    return user.profile.addresses
