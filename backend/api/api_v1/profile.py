@@ -5,7 +5,7 @@ from api.dependencies.session import session_depends
 from api.exception.message import NO_PROFILE
 from core.config import settings
 from core.models import User
-from core.schemas.profile import ProfileSchemas
+from core.schemas.profile import ProfileSchemas, ProfileUpdate
 from .crud import profile as crud_profile
 
 router = APIRouter(
@@ -49,3 +49,20 @@ async def delete_profile(
     user: User = Depends(current_user),
 ) -> None:
     await crud_profile.delete_profile(session, user.id)
+
+
+@router.put("/update", response_model=ProfileSchemas)
+async def update_profile(
+    session: session_depends,
+    profile_update: ProfileUpdate,
+    user: User = Depends(current_user),
+):
+    if not (
+        profile := await crud_profile.update_profile(
+            session,
+            user.id,
+            profile_update,
+        )
+    ):
+        raise NO_PROFILE
+    return profile
