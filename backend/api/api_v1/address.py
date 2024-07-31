@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, status
 from api.api_v1.crud import address as crud_address
 from api.api_v1.fastapi_users import current_user
 from api.dependencies.session import session_depends
-from api.exception.message import NO_PROFILE
+from api.exception.message import NO_PROFILE, NO_ADDRESS
 from core.config import settings
 from core.models import User
 from core.schemas.address import AddressModel, AddressMeModel
@@ -60,5 +60,5 @@ async def get_addresses_current_user(
             user.id,
         )
     ):
-        raise NO_PROFILE
+        raise NO_ADDRESS
     return address
