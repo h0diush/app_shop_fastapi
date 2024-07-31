@@ -6,7 +6,7 @@ from api.dependencies.session import session_depends
 from api.exception.message import NO_PROFILE, NO_ADDRESS
 from core.config import settings
 from core.models import User
-from core.schemas.address import AddressModel, AddressMeModel
+from core.schemas.address import AddressModel, AddressMeModel, AddressUpdate
 
 router = APIRouter(
     prefix=settings.api.v1.address,
@@ -62,3 +62,18 @@ async def get_addresses_current_user(
     ):
         raise NO_ADDRESS
     return address
+
+
+@router.put("/update", response_model=AddressModel)
+async def update_address(
+    session: session_depends,
+    address_id: int,
+    address_in: AddressUpdate,
+    user: User = Depends(current_user),
+):
+    return await crud_address.update_address(
+        session,
+        user.id,
+        address_id,
+        address_in,
+    )

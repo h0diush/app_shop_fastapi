@@ -11,3 +11,11 @@ class AddressModel(BaseModel):
 
 class AddressMeModel(AddressModel):
     id: int
+
+
+class AddressUpdate(BaseModel):
+    city: str | None = None
+    street: str | None = None
+    home: int | None = None
+    room: int | None = None
+    entrance: int | None = None
