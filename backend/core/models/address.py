@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 
-from sqlalchemy import String
+from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models.mixins import IntIdMixin
@@ -19,7 +19,9 @@ class Address(Base, IntIdMixin):
     home: Mapped[int]
     room: Mapped[int | None] = mapped_column(nullable=True)
     entrance: Mapped[int | None] = mapped_column(nullable=True)
+    profile_id: Mapped[int] = mapped_column(
+        ForeignKey("profiles.id", ondelete="cascade"),
+    )
     profile: Mapped["Profile"] = relationship(
-        secondary="address_profile_association",
         back_populates="addresses",
     )

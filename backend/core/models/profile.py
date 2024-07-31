@@ -20,7 +20,6 @@ class Profile(Base, IntIdMixin):
     )
     phone: Mapped[int]
     addresses: Mapped[list["Address"]] = relationship(
-        secondary="address_profile_association",
         back_populates="profile",
     )
     user: Mapped["User"] = relationship(back_populates="profile")
