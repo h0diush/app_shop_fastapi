@@ -6,7 +6,7 @@ from api.api_v1.crud.utilities import (
 )
 from api.exception.message import NO_PROFILE
 from core.models import Address
-from core.schemas.address import AddressModel, AddressMeModel
+from core.schemas.address import AddressModel, AddressMeModel, AddressUpdate
 
 
 async def add_address(
@@ -45,3 +45,21 @@ async def get_addresses_for_current_user(
     if user.profile:
         return user.profile.addresses
     raise NO_PROFILE
+
+
+async def update_address(
+    session: AsyncSession,
+    user_id: int,
+    address_id: int,
+    address_update: AddressUpdate,
+):
+    # user = await get_user_select_in_load_profile(session, user_id)
+    address = await address_delete_and_update_utility(
+        session,
+        address_id,
+        user_id,
+    )
+    for name, value in address_update.model_dump(exclude_none=True).items():
+        setattr(address, name, value)
+    await session.commit()
+    return address
