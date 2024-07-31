@@ -39,13 +39,13 @@ async def delete_profile(session: AsyncSession, user_id: int) -> None:
 async def update_profile(
     session: AsyncSession,
     user_id: int,
-    profile_create: ProfileUpdate,
+    profile_update: ProfileUpdate,
 ):
     stmt = select(Profile).where(Profile.user_id == user_id)
     profile = await session.scalar(stmt)
     if not profile:
         return None
-    for name, value in profile_create.model_dump(exclude_none=True).items():
+    for name, value in profile_update.model_dump(exclude_none=True).items():
         setattr(profile, name, value)
     await session.commit()
     return profile
