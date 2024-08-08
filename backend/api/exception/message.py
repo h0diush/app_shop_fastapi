@@ -14,3 +14,8 @@ NO_ADDRESS = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND,
     detail="Адрес не существует",
 )
+
+
+NO_CATEGORY = HTTPException(
+    status_code=status.HTTP_404_NOT_FOUND, detail="Данной группы не существует"
+)
