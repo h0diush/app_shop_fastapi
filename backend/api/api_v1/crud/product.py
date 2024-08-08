@@ -1,7 +1,8 @@
 from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 
-from core.models import Product
+from core.models import Product, Category
 from core.schemas.product import ProductCreate
 
 
@@ -28,4 +29,16 @@ async def delete_product(session: AsyncSession, product_id: int):
     stmt = delete(Product).where(Product.id == product_id)
     await session.execute(stmt)
     await session.commit()
+    return None
+
+
+async def get_products_by_category_id(session: AsyncSession, category_id):
+    stmt = (
+        select(Category)
+        .where(Category.id == category_id)
+        .options(joinedload(Category.products))
+    )
+    category = await session.scalar(stmt)
+    if category:
+        return category.products
     return None
